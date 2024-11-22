@@ -45,7 +45,7 @@
 
 
 
-      window.location.replace('touristpass://close-webview/data');
+      window.location.replace('touristpass://close-webview'+(typeof data === 'string'? `/${data}`:''));
     };
 
     const triggerAppOpen = function () {
