@@ -45,7 +45,7 @@
 
 
 
-      window.location.replace('touristpass://close-webview');
+      window.location.replace('touristpass://close-webview/data');
     };
 
     const triggerAppOpen = function () {
@@ -70,7 +70,7 @@
     if(!isChrome){
       triggerAppOpen();
     }else{
-      let con = confirm('Открыть "Tourist Pass" ?')
+      let con = confirm('Открыть "Карта туриста РТ" ?')
       if(con){
         triggerAppOpen();
       }
