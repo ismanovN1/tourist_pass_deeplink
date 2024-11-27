@@ -24,14 +24,14 @@
   <p>Перенаправляю вас в приложение...</p>
 
   <script>
-    // Define fallback URLs for App Store and Play Store
-    const APP_STORE_URL = 'https://apps.apple.com/ru/app/tourist-pass/id1457537748';
-    const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=ru.akbars.guestcard&hl=ru&gl=US';
+    // App Store and Play Store native URLs
+    const APP_STORE_URL = 'itms-apps://apps.apple.com/ru/app/tourist-pass/id1457537748';
+    const PLAY_STORE_URL = 'market://details?id=ru.akbars.guestcard';
 
-    // Define the custom deep link
+    // Custom deep link
     const DEEP_LINK = 'touristpass://partners';
 
-    // Open the app using an iframe (works for many browsers)
+    // Open the app using an iframe (attempt deep link first)
     const openApp = () => {
       const iframe = document.createElement('iframe');
       iframe.style.display = 'none';
@@ -43,35 +43,33 @@
       }, 1500); // Remove iframe after 1.5 seconds
     };
 
-    // Detect the platform (iOS or Android)
+    // Detect platform (iOS or Android)
     const getPlatform = () => {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      if (/android/i.test(userAgent)) {
-        return 'Android';
-      }
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-        return 'iOS';
-      }
+      if (/android/i.test(userAgent)) return 'Android';
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return 'iOS';
       return 'Unknown';
     };
 
-    // Trigger deep link and fallback logic
+    // Trigger app open or fallback to the store
     const triggerAppOpen = () => {
       const platform = getPlatform();
 
       openApp(); // Attempt to open the app
 
-      // Fallback to App Store or Play Store after 1.5 seconds
+      // Redirect to the store if the app isn't opened
       setTimeout(() => {
         if (platform === 'iOS') {
+          // iOS-specific App Store fallback
           window.location.href = APP_STORE_URL;
         } else if (platform === 'Android') {
+          // Android-specific Play Store fallback
           window.location.href = PLAY_STORE_URL;
         }
       }, 1500);
     };
 
-    // Execute the logic when the page loads
+    // Execute on page load
     window.onload = () => {
       triggerAppOpen();
     };
