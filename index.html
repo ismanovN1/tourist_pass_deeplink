@@ -1,82 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-    <style type="text/css">
-   div { 
-	  display:flex;
-    flex-direction: column;
-    width:100vw;
-    height: 100vh;
-	  align-items: center;
-    justify-content: center;
-   }
-   span {
-     font-size: 18px;
-     font-weight: 700;
-
-   }
-
+  <title>Open App</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    p {
+      font-size: 18px;
+      font-weight: bold;
+    }
   </style>
 </head>
-
 <body>
-	<div>
-  </div>
-  <Script>
-    const isChrome = navigator.userAgent.includes('Chrome') ;
-    const fallbackToAppStore = function () {
-      window.location.replace(
-        'https://apps.apple.com/ru/app/tourist-pass/id1457537748',
-      );
+  <p>Перенаправляю вас в приложение...</p>
+
+  <script>
+    // Define fallback URLs for App Store and Play Store
+    const APP_STORE_URL = 'https://apps.apple.com/ru/app/tourist-pass/id1457537748';
+    const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=ru.akbars.guestcard&hl=ru&gl=US';
+
+    // Define the custom deep link
+    const DEEP_LINK = 'touristpass://partners';
+
+    // Open the app using an iframe (works for many browsers)
+    const openApp = () => {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = DEEP_LINK;
+      document.body.appendChild(iframe);
+
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 1500); // Remove iframe after 1.5 seconds
     };
 
-    const fallbackToPlayMarket = function () {
-      window.location.replace(
-        'https://play.google.com/store/apps/details?id=ru.akbars.guestcard&hl=ru&gl=US',
-      );
-    };
-    const openApp = function () {
-      const params = new URLSearchParams(window.location.search);
-      const data = params.get('data');
-
-
-
-      window.location.replace('touristpass://partners'+(typeof data === 'string'? /${data}:''));
+    // Detect the platform (iOS or Android)
+    const getPlatform = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      if (/android/i.test(userAgent)) {
+        return 'Android';
+      }
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return 'iOS';
+      }
+      return 'Unknown';
     };
 
-    const triggerAppOpen = function () {
-      openApp();
+    // Trigger deep link and fallback logic
+    const triggerAppOpen = () => {
       const platform = getPlatform();
 
-      if (platform == 'iOS') setTimeout(fallbackToAppStore, 250);
-      else if (platform == 'Android' ) setTimeout(fallbackToPlayMarket, 250);
+      openApp(); // Attempt to open the app
+
+      // Fallback to App Store or Play Store after 1.5 seconds
+      setTimeout(() => {
+        if (platform === 'iOS') {
+          window.location.href = APP_STORE_URL;
+        } else if (platform === 'Android') {
+          window.location.href = PLAY_STORE_URL;
+        }
+      }, 1500);
     };
 
-    function getPlatform() {
-      var platform = ['Android', 'iOS'];
-
-
-      for (var i = 0; i < platform.length; i++) {
-        if (navigator.userAgent.includes(platform[i])) {
-          return platform[i];
-
-        }
-      }
-    }
-    if(!isChrome){
+    // Execute the logic when the page loads
+    window.onload = () => {
       triggerAppOpen();
-    }else{
-      let con = confirm('Открыть "Карта туриста РТ" ?')
-      if(con){
-        triggerAppOpen();
-      }
-    }
-
-  </Script>
+    };
+  </script>
 </body>
-
 </html>
