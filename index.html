@@ -27,14 +27,12 @@
     <p>Перенаправляю вас в приложение...</p>
 
     <script>
-        // App Store and Play Store native URLs
+        const isChrome = navigator.userAgent.includes('Chrome');
         const APP_STORE_URL = 'itms-apps://apps.apple.com/ru/app/tourist-pass/id1457537748';
         const PLAY_STORE_URL = 'market://details?id=ru.akbars.guestcard';
-
-        // Custom deep link
         const DEEP_LINK = 'touristpass://partners';
 
-        // Open the app using an iframe (attempt deep link first)
+
         const openApp = () => {
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
@@ -43,10 +41,9 @@
 
             setTimeout(() => {
                 document.body.removeChild(iframe);
-            }, 1500); // Remove iframe after 1.5 seconds
+            }, 1500);
         };
 
-        // Detect platform (iOS or Android)
         const getPlatform = () => {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             if (/android/i.test(userAgent)) return 'Android';
@@ -74,7 +71,7 @@
 
         // Execute on page load
         window.onload = () => {
-            if (getPlatform() === 'iOS') {
+            if (getPlatform() === 'iOS' && !isChrome) {
                 triggerAppOpen();
             } else {
                 let con = confirm('Открыть "Карта туриста РТ" ?')
