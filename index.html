@@ -1,78 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open App</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    p {
-      font-size: 18px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <p>Перенаправляю вас в приложение...</p>
-
-  <script>
-    // App Store and Play Store native URLs
-    const APP_STORE_URL = 'itms-apps://apps.apple.com/ru/app/tourist-pass/id1457537748';
-    const PLAY_STORE_URL = 'market://details?id=ru.akbars.guestcard';
-
-    // Custom deep link
-    const DEEP_LINK = 'touristpass://partners';
-
-    // Open the app using an iframe (attempt deep link first)
-    const openApp = () => {
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = DEEP_LINK;
-      document.body.appendChild(iframe);
-
-      setTimeout(() => {
-        document.body.removeChild(iframe);
-      }, 1500); // Remove iframe after 1.5 seconds
-    };
-
-    // Detect platform (iOS or Android)
-    const getPlatform = () => {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      if (/android/i.test(userAgent)) return 'Android';
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return 'iOS';
-      return 'Unknown';
-    };
-
-    // Trigger app open or fallback to the store
-    const triggerAppOpen = () => {
-      const platform = getPlatform();
-
-      openApp(); // Attempt to open the app
-
-      // Redirect to the store if the app isn't opened
-      setTimeout(() => {
-        if (platform === 'iOS') {
-          // iOS-specific App Store fallback
-          window.location.href = APP_STORE_URL;
-        } else if (platform === 'Android') {
-          // Android-specific Play Store fallback
-          window.location.href = PLAY_STORE_URL;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open App</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
-      }, 1500);
-    };
 
-    // Execute on page load
-    window.onload = () => {
-      triggerAppOpen();
-    };
-  </script>
+        p {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <p>Перенаправляю вас в приложение...</p>
+
+    <script>
+        // App Store and Play Store native URLs
+        const APP_STORE_URL = 'itms-apps://apps.apple.com/ru/app/tourist-pass/id1457537748';
+        const PLAY_STORE_URL = 'market://details?id=ru.akbars.guestcard';
+
+        // Custom deep link
+        const DEEP_LINK = 'touristpass://partners';
+
+        // Open the app using an iframe (attempt deep link first)
+        const openApp = () => {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = DEEP_LINK;
+            document.body.appendChild(iframe);
+
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1500); // Remove iframe after 1.5 seconds
+        };
+
+        // Detect platform (iOS or Android)
+        const getPlatform = () => {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(userAgent)) return 'Android';
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return 'iOS';
+            return 'Unknown';
+        };
+
+        // Trigger app open or fallback to the store
+        const triggerAppOpen = () => {
+            const platform = getPlatform();
+
+            openApp(); // Attempt to open the app
+
+            // Redirect to the store if the app isn't opened
+            setTimeout(() => {
+                if (platform === 'iOS') {
+                    // iOS-specific App Store fallback
+                    window.location.href = APP_STORE_URL;
+                } else if (platform === 'Android') {
+                    // Android-specific Play Store fallback
+                    window.location.href = PLAY_STORE_URL;
+                } else window.location.href = "https://visit-tatarstan.com/"
+            }, 1500);
+        };
+
+        // Execute on page load
+        window.onload = () => {
+            if (getPlatform() === 'iOS') {
+                triggerAppOpen();
+            } else {
+                let con = confirm('Открыть "Карта туриста РТ" ?')
+                if (con) {
+                    triggerAppOpen();
+                }
+            }
+        };
+    </script>
 </body>
+
 </html>
