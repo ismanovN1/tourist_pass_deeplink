@@ -26,57 +26,55 @@
 <body>
 	<div>
   </div>
-  <Script>
-    const isChrome = navigator.userAgent.includes('Chrome') ;
-    const fallbackToAppStore = function () {
-      window.location.replace(
-        'https://apps.apple.com/ru/app/tourist-pass/id1457537748',
-      );
-    };
+  <script>
+  const isChrome = navigator.userAgent.includes('Chrome');
+  
+  const fallbackToAppStore = () => {
+    window.location.replace('https://apps.apple.com/ru/app/tourist-pass/id1457537748');
+  };
 
-    const fallbackToPlayMarket = function () {
-      window.location.replace(
-        'https://play.google.com/store/apps/details?id=ru.akbars.guestcard&hl=ru&gl=US',
-      );
-    };
-    const openApp = function () {
-      const params = new URLSearchParams(window.location.search);
-      const data = params.get('data');
+  const fallbackToPlayMarket = () => {
+    window.location.replace('https://play.google.com/store/apps/details?id=ru.akbars.guestcard&hl=ru&gl=US');
+  };
 
+  const openApp = () => {
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get('data');
+    const appLink = 'touristpass://partners' + (data ? `/${data}` : '');
 
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = appLink;
+    document.body.appendChild(iframe);
 
-      window.location.replace('touristpass://partners'+(typeof data === 'string'? `/${data}`:''));
-    };
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 1000);
+  };
 
-    const triggerAppOpen = function () {
-      openApp();
-      const platform = getPlatform();
+  const triggerAppOpen = () => {
+    openApp();
+    const platform = getPlatform();
 
-      if (platform == 'iOS') setTimeout(fallbackToAppStore, 250);
-      else if (platform == 'Android' ) setTimeout(fallbackToPlayMarket, 250);
-    };
+    if (platform === 'iOS') setTimeout(fallbackToAppStore, 1000);
+    else if (platform === 'Android') setTimeout(fallbackToPlayMarket, 1000);
+  };
 
-    function getPlatform() {
-      var platform = ['Android', 'iOS'];
+  const getPlatform = () => {
+    if (navigator.userAgent.includes('iOS')) return 'iOS';
+    if (navigator.userAgent.includes('Android')) return 'Android';
+    return 'Unknown';
+  };
 
-
-      for (var i = 0; i < platform.length; i++) {
-        if (navigator.userAgent.includes(platform[i])) {
-          return platform[i];
-
-        }
-      }
-    }
-    if(!isChrome){
+  if (!isChrome) {
+    triggerAppOpen();
+  } else {
+    const confirmOpen = confirm('Открыть "Карта туриста РТ"?');
+    if (confirmOpen) {
       triggerAppOpen();
-    }else{
-      let con = confirm('Открыть "Карта туриста РТ" ?')
-      if(con){
-        triggerAppOpen();
-      }
     }
-
-  </Script>
+  }
+</script>
 </body>
 
 </html>
