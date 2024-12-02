@@ -64,10 +64,10 @@
     const platform = getPlatform();
 
     // Open deep link
-    window.location.href = DEEP_LINK;
-
-    // Fallback after delay
-    setTimeout(() => {
+   try {
+        window.location.href = DEEP_LINK;
+   } catch (error){
+       setTimeout(() => {
         if (platform === 'iOS') {
             window.location.href = APP_STORE_URL;
         } else if (platform === 'Android') {
