@@ -79,16 +79,12 @@
 
         // Execute on page load
         window.onload = () => {
-            if (getPlatform() === 'iOS' && !isChrome) {
-                triggerAppOpen();
-            } else {
-                let con = confirm('Открыть "Карта туриста РТ" ?')
+            let con = confirm('Открыть "Карта туриста РТ" ?')
                 if (con) {
                     triggerAppOpen();
                 } else {
                     window.location.href = "https://visit-tatarstan.com/"
                 }
-            }
         };
     </script>
 </body>
