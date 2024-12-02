@@ -59,22 +59,23 @@
         };
 
         // Trigger app open or fallback to the store
-        const triggerAppOpen = () => {
-            const platform = getPlatform();
+      const triggerAppOpen = () => {
+    const platform = getPlatform();
 
-            openApp(); // Attempt to open the app
+    // Open deep link
+    window.location.href = DEEP_LINK;
 
-            // Redirect to the store if the app isn't opened
-            setTimeout(() => {
-                if (platform === 'iOS') {
-                    // iOS-specific App Store fallback
-                    window.location.href = APP_STORE_URL;
-                } else if (platform === 'Android') {
-                    // Android-specific Play Store fallback
-                    window.location.href = PLAY_STORE_URL;
-                } else window.location.href = "https://visit-tatarstan.com/"
-            }, 1500);
-        };
+    // Fallback after delay
+    setTimeout(() => {
+        if (platform === 'iOS') {
+            window.location.href = APP_STORE_URL;
+        } else if (platform === 'Android') {
+            window.location.href = PLAY_STORE_URL;
+        } else {
+            window.location.href = "https://visit-tatarstan.com/";
+        }
+    }, 1500);
+};
 
         // Execute on page load
         const open = () => {
